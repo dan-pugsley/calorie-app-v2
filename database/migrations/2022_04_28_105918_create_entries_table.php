@@ -15,6 +15,13 @@ return new class extends Migration
     {
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->string('name', 70);
+            $table->smallInteger('calories')->unsigned();
+            $table->boolean('is_cheat');
             $table->timestamps();
         });
     }
