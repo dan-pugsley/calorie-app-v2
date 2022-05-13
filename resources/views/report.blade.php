@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Report')
 @section('content')
-    <div class="content">
+    <div class="content" style="width: 380px;">
         <span class="heading">Last {period} days</span>
         <hr>
         <div>

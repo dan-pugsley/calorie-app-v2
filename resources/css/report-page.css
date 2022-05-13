@@ -1,0 +1,34 @@
+.heading {
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    line-height: 27px;
+    color: var(--col-dark-blue);
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 6px 23px;
+
+    background: var(--col-blue);
+    border: 1px solid white;
+    border-radius: 14px;
+
+    font-size: 20px;
+    line-height: 27px;
+    color: white;
+}
+.stat:not(:first-child) {
+    margin-top: 15px;
+}
+
+/* value */
+.stat > :last-child {
+    margin-left: 13px;
+    
+    font-weight: 600;
+    text-align: right;
+}

@@ -1,0 +1,486 @@
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    position: absolute;
+    opacity: 0;
+    cursor: unset;
+    height: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+}
+
+.box-shadow {
+    box-shadow: var(--box-shadow);
+}
+
+.no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ellipsis-multiline {
+    --max-lines: 2;
+
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: var(--max-lines);
+           line-clamp: var(--max-lines);
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body {
+    --col-light-blue: #8ECAE6;
+    --col-blue: #219EBC;
+    --col-dark-blue: #023047;
+
+    margin: 0;
+    padding: 62px 74px 86px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: var(--col-light-blue);
+
+    font-family: 'Open Sans', sans-serif;
+}
+
+hr {
+    height: 1px;
+    margin: 15px 0;
+
+    background: var(--col-dark-blue);
+    border: none;
+}
+
+.content {
+    max-width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.btn {
+    height: 39px;
+    padding: 0 17px;
+
+    background: var(--col-blue);
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+    cursor: pointer;
+
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 27px;
+    color: white;
+}
+.btn--light {
+    background: white;
+    border: none;
+
+    color: var(--col-dark-blue);
+}
+.btn--dark {
+    background: var(--col-dark-blue);
+    border: none;
+}
+.btn--small {
+    height: 30px;
+    padding: 0 14px;
+
+    border-radius: 7px;
+
+    font-size: 16px;
+    line-height: 22px;
+}
+input[type=number].btn {
+    cursor: text;
+}
+input[type=date].btn {
+    color-scheme: dark;
+}
+
+
+/* ——— Control ——— */
+
+.control {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.control__filters {
+    --cell-padding: 7.5px;
+
+    /* offset cell padding */
+    margin: calc(-1 * var(--cell-padding));
+}
+
+.control__filters td {
+    padding: var(--cell-padding);
+}
+
+.control__filters td:first-child {
+    text-align: right;
+}
+
+.control__filters label {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 27px;
+    color: var(--col-dark-blue);
+}
+
+.control__filters input {
+    width: 175px;
+}
+
+/* add entry button */
+.control > .btn {
+    margin-top: 15px;
+}
+
+
+/* ——— Days ——— */
+
+.days {
+    display: flex;
+    flex-direction: column;
+}
+
+.days__loading {
+    align-self: center;
+
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    line-height: 27px;
+    color: var(--col-dark-blue);
+}
+
+.days > div:not(:first-of-type) {
+    margin-top: 15px;
+}
+
+.day {
+    background: var(--col-blue);
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+}
+
+.day__header {
+    display: flex;
+    align-items: center;
+
+    height: 39px;
+    padding-left: 23px;
+    padding-right: 16px;
+    cursor: pointer;
+
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 27px;
+    color: white;
+}
+
+.day__name {
+    flex: 1;
+}
+
+.day__cal-count {
+    display: flex;
+    align-items: center;
+
+    margin: 0 15px;
+}
+
+/* warning */
+.day__cal-count > svg {
+    margin-left: 10px;
+}
+
+.day__chevron {
+    transition: transform 0.15s ease-out;
+}
+input:checked ~ .day__chevron {
+    transform: rotate(180deg);
+}
+
+.day__entries {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px 23px 20px 47px;
+
+    border-top: 1px solid white;
+}
+
+
+/* ——— Entries ——— */
+
+.entry {
+    display: flex;
+    align-items: center;
+
+    padding-left: 16px;
+    min-height: 36px;
+
+    background: white;
+    border-radius: 7px;
+}
+.entry:not(:first-child) {
+    margin-top: 12px;
+}
+
+.entry__data {
+    flex: 1;
+
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    font-size: 18px;
+    line-height: 25px;
+    color: var(--col-dark-blue);
+}
+
+/* Strike out calories for cheat entries. */
+.entry--cheat > .entry__data > span:last-child {
+    text-decoration: line-through;
+    color: var(--col-light-blue);
+}
+
+.entry__overflow-btn {
+    all: unset;
+
+    align-self: stretch;
+
+    width: 39px;
+
+    cursor: pointer;
+}
+
+/* flexbox */
+.entry__overflow-btn > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.load-more-btn {
+    align-self: center;
+
+    margin-top: 30px;
+}
+
+
+/* ——— Overflow menu ——— */
+
+.overflow-menu {
+    position: absolute;
+    left: 0; top: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 4px 0;
+
+    background: var(--col-light-blue);
+    border-radius: 7px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+}
+
+.overflow-menu > input {
+    all: unset;
+
+    padding: 3.5px 14px;
+    margin: 2px 0;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    line-height: 22px;
+    text-align: right;
+    color: var(--col-dark-blue);
+}
+.overflow-menu > input:hover {
+    background: #72BDDF;
+}
+
+
+/* ——— Entry overlay ——— */
+
+.entry-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.entry-overlay__blocker {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+
+    background: var(--col-light-blue);
+    opacity: 0.7;
+}
+
+.entry-overlay__form {
+    position: absolute;
+    padding: 22px 21px 17px;
+
+    display: flex;
+    flex-direction: column;
+    
+    background: var(--col-blue);
+    border: 1px solid white;
+    border-radius: 14px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+}
+
+.entry-overlay__table {
+    --cell-padding-x: 7.5px;
+    --cell-padding-y: 5.5px;
+
+    /* offset cell padding */
+    margin:
+        calc(-1 * var(--cell-padding-y))
+        calc(-1 * var(--cell-padding-x));
+
+    color: var(--col-dark-blue);
+}
+
+.entry-overlay__table td {
+    padding:
+        var(--cell-padding-y)
+        var(--cell-padding-x);
+}
+.entry-overlay__table td:first-child {
+    text-align: right;
+}
+
+.entry-overlay__table label {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.entry-overlay__table input,
+.entry-overlay__checkbox {
+    all: unset;
+
+    padding: 2.5px 10px;
+    min-height: 27px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    background: white;
+    border-radius: 7px;
+
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.entry-overlay__checkbox {
+    padding: 0;
+    width: 27px;
+    cursor: pointer;
+
+    justify-content: center;
+}
+
+.entry-overlay__checkbox > input:not(:checked) ~ span {
+    display: none;
+}
+
+.entry-overlay__btns {
+    align-self: flex-end;
+
+    margin-top: 25px;
+
+    display: flex;
+}
+
+.entry-overlay__btns > .btn:not(:first-child) {
+    margin-left: 11px;
+}
+
+.heading {
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    line-height: 27px;
+    color: var(--col-dark-blue);
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 6px 23px;
+
+    background: var(--col-blue);
+    border: 1px solid white;
+    border-radius: 14px;
+
+    font-size: 20px;
+    line-height: 27px;
+    color: white;
+}
+.stat:not(:first-child) {
+    margin-top: 15px;
+}
+
+/* value */
+.stat > :last-child {
+    margin-left: 13px;
+    
+    font-weight: 600;
+    text-align: right;
+}
+
+
+

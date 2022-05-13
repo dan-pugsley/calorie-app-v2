@@ -1,0 +1,31 @@
+body {
+    --col-light-blue: #8ECAE6;
+    --col-blue: #219EBC;
+    --col-dark-blue: #023047;
+
+    margin: 0;
+    padding: 62px 74px 86px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background: var(--col-light-blue);
+
+    font-family: 'Open Sans', sans-serif;
+}
+
+hr {
+    height: 1px;
+    margin: 15px 0;
+
+    background: var(--col-dark-blue);
+    border: none;
+}
+
+.content {
+    max-width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}

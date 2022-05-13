@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Entries')
 @section('content')
-    <div class="content">
+    <div class="content" style="width: 563px;">
         <!-- Control -->
         <div class="control js-control">
             <table class="control__filters" cellspacing="0">
