@@ -17,8 +17,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $tokenName = 'api';
+
+        // Create admin user.
         User::factory()->admin()->create();
+        
+        // Create standard users.
         User::factory()->count(2)->create();
+
+        // Create entries for users.
         Entry::factory()->count(50)->create();
     }
 }
