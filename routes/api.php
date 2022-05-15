@@ -1,11 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\User;
-use App\Models\Entry;
+use App\Http\Controllers\EntryController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,29 +16,10 @@ use App\Models\Entry;
 |
 */
 
-Route::post('/generate-token/{user_id}', function($userId) {
-    return ['token' => User::findOrFail($userId)->createToken('api')->plainTextToken];
+Route::post('/tokens', function(Request $request) {
+    return [
+        'token' => User::findOrFail($request->post('user_id'))->createToken('api')->plainTextToken
+    ];
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware('auth:sanctum')->get('/entries', function(Request $request) {
-    return DB::table('entries')->select('*')->where('user_id', $request->user()->id)->get();
-});
-
-Route::middleware('auth:sanctum')->post('/entry', function(Request $request) {
-    $validated = $request->validate([
-        'name' => 'required|string|max:70',
-        'calories' => 'required|integer|between:1,12000',
-        'is_cheat' => 'required|boolean',
-    ]);
-
-    return Entry::create([
-        'user_id' => $request->user()->id,
-        'name' => $validated['name'],
-        'calories' => $validated['calories'],
-        'is_cheat' => $validated['is_cheat'],
-    ])->id;
-});
+Route::apiResource('entries', EntryController::class);
