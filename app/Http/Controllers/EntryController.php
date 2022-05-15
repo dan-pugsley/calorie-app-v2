@@ -52,6 +52,7 @@ class EntryController extends Controller
             'name' => $safe['name'],
             'calories' => $safe['calories'],
             'is_cheat' => $safe['is_cheat'],
+            'created_at' => $safe['created_at'],
         ]);
 
         return [
@@ -84,6 +85,7 @@ class EntryController extends Controller
         if (isset($safe['name'])) $entry->name = $safe['name'];
         if (isset($safe['calories'])) $entry->calories = $safe['calories'];
         if (isset($safe['is_cheat'])) $entry->is_cheat = $safe['is_cheat'];
+        if (isset($safe['created_at'])) $entry->created_at = $safe['created_at'];
 
         $entry->save();
 

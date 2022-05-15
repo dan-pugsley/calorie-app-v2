@@ -19,5 +19,6 @@ class Entry extends Model
         'name',
         'calories',
         'is_cheat',
+        'created_at',
     ];
 }
