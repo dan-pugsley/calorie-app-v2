@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEntryRequest;
 use App\Http\Requests\UpdateEntryRequest;
 use App\Models\User;
 use App\Models\Entry;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EntryController extends Controller
@@ -25,16 +26,48 @@ class EntryController extends Controller
      * Display a listing of the resource.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $fromTs
+     * @param  int  $toTs
+     * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $fromTs = null, $toTs = null, $userId = null)
     {
         $user = $request->user();
 
-        return [
-            'entries' => Entry::where('user_id', $user->id)->get(),
-            'daily_calorie_limit' => User::where('id', $user->id)->get('daily_calorie_limit'),
+        $request->merge(['from_ts' => $fromTs]);
+        $request->merge(['to_ts' => $toTs]);
+        $request->merge(['user_id' => $userId]);
+
+        $userIdRules = ['integer', 'nullable'];
+
+        // Allow user ID of zero for admin to view ALL users.
+        if ($userId != 0)
+            $userIdRules[] = 'exists:users,id';
+
+        $request->validate([
+            'from_ts' => 'integer|min:0|nullable',
+            'to_ts' => 'integer|min:0|nullable',
+            'user_id' => $userIdRules,
+        ]);
+
+        if (is_null($userId) || !$user->is_admin)
+            $userId = $user->id;
+
+        $conditions = [];
+
+        if ($userId) $conditions[] = ['user_id', '=', $userId];
+        if ($fromTs) $conditions[] = ['created_at', '>=', Carbon::createFromTimestamp($fromTs)];
+        if ($toTs) $conditions[] = ['created_at', '<=', Carbon::createFromTimestamp($toTs)];
+
+        $output = [
+            'entries' => Entry::where($conditions)->orderByDesc('created_at')->get()
         ];
+
+        if ($userId)
+            $output['daily_calorie_limit'] = User::where('id', $userId)->get('daily_calorie_limit');
+
+        return $output;
     }
 
     /**
@@ -47,13 +80,17 @@ class EntryController extends Controller
     {
         $safe = $request->safe();
 
-        $entry = Entry::create([
+        $params = [
             'user_id' => $request->user()->id,
             'name' => $safe['name'],
             'calories' => $safe['calories'],
             'is_cheat' => $safe['is_cheat'],
-            'created_at' => $safe['created_at'],
-        ]);
+        ];
+
+        if (isset($safe['created_at']))
+            $params[] = $safe['created_at'];
+
+        $entry = Entry::create($params);
 
         return [
             'id' => $entry->id

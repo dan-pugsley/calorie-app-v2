@@ -27,7 +27,7 @@ class StoreEntryRequest extends FormRequest
             'name' => 'required|string|max:70',
             'calories' => 'required|integer|between:1,12000',
             'is_cheat' => 'required|boolean',
-            'created_at' => 'integer|nullable',
+            'created_at' => 'integer|min:0|nullable',
         ];
     }
 }

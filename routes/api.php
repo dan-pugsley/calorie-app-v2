@@ -22,4 +22,7 @@ Route::post('/tokens', function(Request $request) {
     ];
 });
 
+// Override index route to allow optional filters.
+Route::get('entries/{from_ts?}/{to_ts?}/{user_id?}', [EntryController::class, 'index']);
+
 Route::apiResource('entries', EntryController::class);
