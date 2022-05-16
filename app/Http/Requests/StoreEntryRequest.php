@@ -23,9 +23,12 @@ class StoreEntryRequest extends FormRequest
      */
     public function rules()
     {
+        $nameMaxLength = config('constants.entries.name_max_length');
+        $maxCalories = config('constants.entries.max_calories');
+
         return [
-            'name' => 'required|string|max:70',
-            'calories' => 'required|integer|between:1,12000',
+            'name' => "required|string|max:$nameMaxLength",
+            'calories' => "required|integer|between:1,$maxCalories",
             'is_cheat' => 'required|boolean',
             'created_at' => 'integer|min:0|nullable',
         ];

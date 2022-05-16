@@ -6,10 +6,10 @@
         <div class="control js-control">
             <table class="control__filters" cellspacing="0">
                 <tbody>
-                    <tr class="{user_row_class}">
+                    <!--<tr>
                         <td><label for="control__user">User:</label></td>
                         <td><input id="control__user" class="btn js-user-input" type="number" value="{user_id}" min="0"/></td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td><label for="control__from-date">From:</label></td>
                         <td><input id="control__from-date" class="btn js-from-date" type="date"/></td>
@@ -27,7 +27,7 @@
         <div class="days js-days">
             <span class="days__loading js-loading">Loading...</span>
             <template>
-                {day}
+                <x-day/>
             </template>
         </div>
     </div>
@@ -47,11 +47,11 @@
                     </tr>
                     <tr>
                         <td><label for="entry-overlay__name">Food:</label></td>
-                        <td><input id="entry-overlay__name" class="js-name-input" type="text" value="banana" maxlength="{name_max_length}" required/></td>
+                        <td><input id="entry-overlay__name" class="js-name-input" type="text" maxlength="{{ config('constants.entries.name_max_length') }}" required/></td>
                     </tr>
                     <tr>
                         <td><label for="entry-overlay__cals">Calories:</label></td>
-                        <td><input id="entry-overlay__cals" class="js-cals-input" type="number" value="62" min="1" max="{max_calories}" required/></td>
+                        <td><input id="entry-overlay__cals" class="js-cals-input" type="number" value="62" min="1" max="{{ config('constants.entries.max_calories') }}" required/></td>
                     </tr>
                     <tr>
                         <td><label for="entry-overlay__cheat">Cheat:</label></td>

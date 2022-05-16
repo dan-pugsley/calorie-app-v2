@@ -23,9 +23,12 @@ class UpdateEntryRequest extends FormRequest
      */
     public function rules()
     {
+        $nameMaxLength = config('constants.entries.name_max_length');
+        $maxCalories = config('constants.entries.max_calories');
+        
         return [
-            'name' => 'string|max:70',
-            'calories' => 'integer|between:1,12000',
+            'name' => "string|max:$nameMaxLength",
+            'calories' => "integer|between:1,$maxCalories",
             'is_cheat' => 'boolean',
             'created_at' => 'integer|min:0|nullable',
         ];

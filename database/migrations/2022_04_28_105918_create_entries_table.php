@@ -19,7 +19,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string('name', 70);
+            $table->string('name', config('constants.entries.name_max_length'));
             $table->smallInteger('calories')->unsigned();
             $table->boolean('is_cheat');
             $table->timestamps();
