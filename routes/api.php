@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\EntryController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 
 /*
@@ -22,7 +23,11 @@ Route::post('/tokens', function(Request $request) {
     ];
 });
 
+// —— Entry ——
 // Override index route to allow optional filters.
 Route::get('entries/{from_ts?}/{to_ts?}/{user_id?}', [EntryController::class, 'index']);
-
 Route::apiResource('entries', EntryController::class);
+
+// —— Report ——
+Route::get('report/entries-added/{period_days?}', [ReportController::class, 'entriesAdded']);
+Route::get('report/user-avg-cals/{period_days?}', [ReportController::class, 'userAvgCals']);

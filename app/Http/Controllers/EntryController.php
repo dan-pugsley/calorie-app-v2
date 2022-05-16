@@ -57,7 +57,7 @@ class EntryController extends Controller
         $conditions = [];
 
         if ($userId) $conditions[] = ['user_id', '=', $userId];
-        if ($fromTs) $conditions[] = ['created_at', '>=', Carbon::createFromTimestamp($fromTs)];
+        if ($fromTs) $conditions[] = ['created_at', '>', Carbon::createFromTimestamp($fromTs)];
         if ($toTs) $conditions[] = ['created_at', '<=', Carbon::createFromTimestamp($toTs)];
 
         $output = [
