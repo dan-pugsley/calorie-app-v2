@@ -18,5 +18,6 @@
     </head>
     <body>
         @yield('content')
+        <div id="root"></div>
     </body>
 </html>
