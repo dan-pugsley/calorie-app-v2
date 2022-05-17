@@ -6,10 +6,12 @@
         <div class="control js-control">
             <table class="control__filters" cellspacing="0">
                 <tbody>
-                    <!--<tr>
-                        <td><label for="control__user">User:</label></td>
-                        <td><input id="control__user" class="btn js-user-input" type="number" value="{user_id}" min="0"/></td>
-                    </tr>-->
+                    @if(Auth::user()->is_admin)
+                        <tr>
+                            <td><label for="control__user">User:</label></td>
+                            <td><input id="control__user" class="btn js-user-input" type="number" value="{{ Auth::user()->id }}" min="0"/></td>
+                        </tr>
+                    @endif
                     <tr>
                         <td><label for="control__from-date">From:</label></td>
                         <td><input id="control__from-date" class="btn js-from-date" type="date"/></td>

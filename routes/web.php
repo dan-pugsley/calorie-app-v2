@@ -13,10 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('entries');
-});
-
-Route::get('/report', function () {
-    return view('report');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/', function () {
+        return view('entries');
+    });
+    
+    Route::get('/report', function () {
+        return view('report');
+    });
 });
