@@ -26,50 +26,12 @@
         </div>
         <hr>
         <!-- Day list -->
-        <div class="days js-days">
-            <span class="days__loading js-loading">Loading...</span>
-            <template>
-                <x-day/>
-            </template>
-        </div>
+        <div class="day-list js-day-list"></div>
     </div>
     <!-- Entry overflow menu -->
     <div class="overflow-menu hidden js-overflow-menu">
         <input class="js-edit-btn" type="button" value="Edit"/>
         <input class="js-remove-btn" type="button" value="Remove"/>
     </div>
-    <div class="entry-overlay hidden js-entry-overlay">
-        <div class="entry-overlay__blocker js-blocker"></div>
-        <form class="entry-overlay__form js-form">
-            <table class="entry-overlay__table">
-                <tbody>
-                    <tr>
-                        <td><label for="entry-overlay__date">Date:</label></td>
-                        <td><input id="entry-overlay__date" class="js-date-time-input" type="datetime-local" required/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="entry-overlay__name">Food:</label></td>
-                        <td><input id="entry-overlay__name" class="js-name-input" type="text" maxlength="{{ config('constants.entries.name_max_length') }}" required/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="entry-overlay__cals">Calories:</label></td>
-                        <td><input id="entry-overlay__cals" class="js-cals-input" type="number" value="62" min="1" max="{{ config('constants.entries.max_calories') }}" required/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="entry-overlay__cheat">Cheat:</label></td>
-                        <td>
-                            <label class="entry-overlay__checkbox">
-                                <input id="entry-overlay__cheat" class="invisible js-cheat-input" type="checkbox"/>
-                                <span>✓</span>
-                            </label>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="entry-overlay__btns">
-                <input class="btn btn--light btn--small js-cancel-btn" type="button" value="Cancel"/>
-                <input class="btn btn--dark btn--small" type="submit" value="Confirm"/>
-            </div>
-        </form>
-    </div>
+    <div class="js-entry-overlay-container"></div>
 @endsection

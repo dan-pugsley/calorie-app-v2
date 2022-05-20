@@ -2164,7 +2164,7 @@ module.exports = {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-__webpack_require__(/*! ./components/tic-tac-toe */ "./resources/js/components/tic-tac-toe.jsx");
+__webpack_require__(/*! ./components/EntriesPage */ "./resources/js/components/EntriesPage.jsx");
 
 /***/ }),
 
@@ -2200,17 +2200,20 @@ window.axios.defaults.withCredentials = true;
 
 /***/ }),
 
-/***/ "./resources/js/components/tic-tac-toe.jsx":
-/*!*************************************************!*\
-  !*** ./resources/js/components/tic-tac-toe.jsx ***!
-  \*************************************************/
+/***/ "./resources/js/components/Day.jsx":
+/*!*****************************************!*\
+  !*** ./resources/js/components/Day.jsx ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _Entry__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Entry */ "./resources/js/components/Entry.jsx");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -2239,103 +2242,792 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var Square = /*#__PURE__*/function (_React$Component) {
-  _inherits(Square, _React$Component);
+var Day = /*#__PURE__*/function (_React$PureComponent) {
+  _inherits(Day, _React$PureComponent);
 
-  var _super = _createSuper(Square);
+  var _super = _createSuper(Day);
 
-  function Square() {
-    _classCallCheck(this, Square);
+  function Day(props) {
+    var _this;
 
-    return _super.apply(this, arguments);
+    _classCallCheck(this, Day);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      isOpen: true
+    };
+    return _this;
   }
 
-  _createClass(Square, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
-        className: "square"
+  _createClass(Day, [{
+    key: "renderCalorieWarning",
+    value: function renderCalorieWarning() {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("svg", {
+        viewBox: "0 0 22 20",
+        width: "22",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("path", {
+          fillRule: "evenodd",
+          clipRule: "evenodd",
+          d: "m21.44 13.95-7-11.97a3.97 3.97 0 0 0-6.88 0l-7 11.98A4 4 0 0 0 3.97 20h14.04a4.01 4.01 0 0 0 3.43-6.05ZM2.28 14.97 9.29 2.98a1.98 1.98 0 0 1 3.42 0l7 11.99a2 2 0 0 1-1.7 3.03H3.97a2 2 0 0 1-1.7-3.03ZM11 16a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm1-10h-2v7h2V6Z",
+          fill: "#FFB703"
+        })
       });
     }
-  }]);
+  }, {
+    key: "renderEntries",
+    value: function renderEntries() {
+      var _this2 = this;
 
-  return Square;
-}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
-
-var Board = /*#__PURE__*/function (_React$Component2) {
-  _inherits(Board, _React$Component2);
-
-  var _super2 = _createSuper(Board);
-
-  function Board() {
-    _classCallCheck(this, Board);
-
-    return _super2.apply(this, arguments);
-  }
-
-  _createClass(Board, [{
-    key: "renderSquare",
-    value: function renderSquare(i) {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Square, {});
+      return this.props.entries.map(function (data) {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_Entry__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          userId: data.user_id,
+          time: "09:00",
+          name: data.name,
+          calories: data.calories,
+          isCheat: data.is_cheat,
+          showUser: _this2.props.showUser
+        }, data.id);
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var status = 'Next player: X';
+      var _this3 = this;
+
+      var totalCalories = this.props.entries.reduce(function (accumulator, entry) {
+        return entry.is_cheat ? accumulator : accumulator + entry.calories;
+      }, 0);
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-          className: "status",
-          children: status
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-          className: "board-row",
-          children: [this.renderSquare(0), this.renderSquare(1), this.renderSquare(2)]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-          className: "board-row",
-          children: [this.renderSquare(3), this.renderSquare(4), this.renderSquare(5)]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-          className: "board-row",
-          children: [this.renderSquare(6), this.renderSquare(7), this.renderSquare(8)]
+        className: "day",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+          className: "day__header",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+            className: "invisible",
+            type: "checkbox",
+            checked: this.state.isOpen,
+            onChange: function onChange(e) {
+              return _this3.setState({
+                isOpen: e.target.checked
+              });
+            }
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+            className: "day__name",
+            children: this.props.name
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "day__cal-count",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+              children: totalCalories
+            }), totalCalories > this.props.calorieLimit && this.renderCalorieWarning()]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("svg", {
+            className: "day__chevron",
+            viewBox: "0 0 16 9",
+            width: "16",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("path", {
+              fillRule: "evenodd",
+              clipRule: "evenodd",
+              d: "m14.08.08 1.18 1.18L8 8.5.74 1.26 1.92.08 8 6.15 14.08.08Z",
+              fill: "#fff"
+            })
+          })]
+        }), this.state.isOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+          className: "day__entry-list",
+          children: this.renderEntries()
         })]
       });
     }
   }]);
 
-  return Board;
-}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+  return Day;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent));
 
-var Game = /*#__PURE__*/function (_React$Component3) {
-  _inherits(Game, _React$Component3);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Day);
 
-  var _super3 = _createSuper(Game);
+/***/ }),
 
-  function Game() {
-    _classCallCheck(this, Game);
+/***/ "./resources/js/components/EntriesControl.jsx":
+/*!****************************************************!*\
+  !*** ./resources/js/components/EntriesControl.jsx ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-    return _super3.apply(this, arguments);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _FormRow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormRow */ "./resources/js/components/FormRow.jsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+
+
+var EntriesControl = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntriesControl, _React$Component);
+
+  var _super = _createSuper(EntriesControl);
+
+  function EntriesControl(props) {
+    var _this;
+
+    _classCallCheck(this, EntriesControl);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      userId: _this.props.initialUserId,
+      fromTimestamp: '',
+      toTimestamp: Date.now()
+    };
+    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
-  _createClass(Game, [{
+  _createClass(EntriesControl, [{
+    key: "parseInputValue",
+    value: function parseInputValue(input) {
+      switch (input.type) {
+        case 'date':
+        case 'datetime-local':
+          return (0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputValToTimestamp)(input.value);
+
+        case 'number':
+          return parseInt(input.value);
+
+        default:
+          return input.value;
+      }
+    }
+  }, {
+    key: "handleInputChange",
+    value: function handleInputChange(e) {
+      this.setState(_defineProperty({}, e.target.name, this.parseInputValue(e.target)));
+    }
+  }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-        className: "game",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-          className: "game-board",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Board, {})
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-          className: "game-info",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ol", {})]
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        className: "control",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("table", {
+          className: "control__filters",
+          cellSpacing: "0",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tbody", {
+            children: [this.props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__user",
+              label: "User",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                id: "control__user",
+                className: "btn",
+                name: "userId",
+                type: "number",
+                value: this.state.userId,
+                onChange: this.handleInputChange,
+                min: "0"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__from-date",
+              label: "From",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                id: "control__from-date",
+                className: "btn",
+                name: "fromTimestamp",
+                type: "date",
+                value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.fromTimestamp, true),
+                onChange: this.handleInputChange
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__to-date",
+              label: "To",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                id: "control__to-date",
+                className: "btn",
+                name: "toTimestamp",
+                type: "date",
+                value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.toTimestamp, true),
+                onChange: this.handleInputChange
+              })
+            })]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+          className: "btn btn--dark",
+          type: "button",
+          value: "+ Add entry"
         })]
       });
     }
   }]);
 
-  return Game;
-}((react__WEBPACK_IMPORTED_MODULE_0___default().Component)); // ========================================
+  return EntriesControl;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EntriesControl);
+
+/***/ }),
+
+/***/ "./resources/js/components/EntriesPage.jsx":
+/*!*************************************************!*\
+  !*** ./resources/js/components/EntriesPage.jsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _EntriesControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EntriesControl */ "./resources/js/components/EntriesControl.jsx");
+/* harmony import */ var _Day__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Day */ "./resources/js/components/Day.jsx");
+/* harmony import */ var _EntryOverlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EntryOverlay */ "./resources/js/components/EntryOverlay.jsx");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
-var root = react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.getElementById("root"));
-root.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Game, {}));
+
+
+
+
+
+
+
+
+
+
+var EntriesPage = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntriesPage, _React$Component);
+
+  var _super = _createSuper(EntriesPage);
+
+  function EntriesPage(props) {
+    var _this;
+
+    _classCallCheck(this, EntriesPage);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      isLoading: true,
+      data: null,
+      error: null,
+      isOverlayOpen: false
+    };
+    return _this;
+  }
+
+  _createClass(EntriesPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_5___default().get('api/entries').then(function (res) {
+        _this2.setState({
+          isLoading: false,
+          data: res.data
+        });
+      })["catch"](function (error) {
+        _this2.setState({
+          isLoading: false,
+          error: error
+        });
+      });
+    }
+  }, {
+    key: "renderDayList",
+    value: function renderDayList() {
+      if (this.state.isLoading) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+        className: "day-list__loading",
+        children: "Loading..."
+      });
+      var days = [];
+      var entries = this.state.data.entries;
+      var currDate = null;
+      var currDayEntries = [];
+
+      for (var i = 0; i < entries.length; ++i) {
+        var entry = entries[i];
+        var dateTimeParts = entry.created_at.split(/[^0-9]/);
+        var dateTime = new Date(dateTimeParts[0], dateTimeParts[1] - 1, dateTimeParts[2], dateTimeParts[3], dateTimeParts[4], dateTimeParts[5]);
+        var date = (0,_utils__WEBPACK_IMPORTED_MODULE_6__.toRelativeLocaleDateString)(dateTime, 'en-US');
+
+        if (currDate !== date) {
+          if (currDate) {
+            days.push( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Day__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              name: currDate,
+              calorieLimit: this.state.data.daily_calorie_limit,
+              entries: currDayEntries,
+              showUser: false
+            }, currDate));
+          }
+
+          currDayEntries = [];
+          currDate = date;
+        }
+
+        currDayEntries.push(entry);
+      }
+
+      if (currDate) days.push( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Day__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        name: currDate,
+        entries: currDayEntries,
+        showUser: false
+      }, currDate));
+      return days;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.state.error) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+        children: ["Error: ", this.state.error.message]
+      });
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+          className: "content",
+          style: {
+            width: '563px'
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_EntriesControl__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            initialUserId: 1,
+            showUser: true
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+            className: "day-list",
+            children: this.renderDayList()
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+          className: "overflow-menu hidden js-overflow-menu",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("input", {
+            className: "js-edit-btn",
+            type: "button",
+            value: "Edit"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("input", {
+            className: "js-remove-btn",
+            type: "button",
+            value: "Remove"
+          })]
+        }), this.state.isOverlayOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_EntryOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          initialTimestamp: Date.now(),
+          initialFood: "",
+          initialCalories: "",
+          initialIsCheat: false
+        })]
+      });
+    }
+  }]);
+
+  return EntriesPage;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.body).render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EntriesPage, {}));
+
+/***/ }),
+
+/***/ "./resources/js/components/Entry.jsx":
+/*!*******************************************!*\
+  !*** ./resources/js/components/Entry.jsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+function Entry(props) {
+  var _this = this;
+
+  var classNames = ['entry'];
+  if (props.isCheat) classNames.push('entry--cheat');
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: classNames.join(' '),
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: "entry__data",
+      children: [props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        children: props.userId
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        children: props.time
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        children: props.name
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        children: props.calories
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+      className: "entry__overflow-btn",
+      onClick: function onClick(e) {
+        return _this.props.onClick(e);
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+          viewBox: "0 0 5 17",
+          width: "5",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            d: "M.6 2a1.85 1.85 0 1 0 3.7 0A1.85 1.85 0 0 0 .6 2Zm1.85 8.3a1.85 1.85 0 1 1 0-3.68 1.85 1.85 0 0 1 0 3.69Zm0 6.47a1.85 1.85 0 1 1 0-3.7 1.85 1.85 0 0 1 0 3.7Z",
+            fill: "#023047"
+          })
+        })
+      })
+    })]
+  });
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Entry);
+
+/***/ }),
+
+/***/ "./resources/js/components/EntryOverlay.jsx":
+/*!**************************************************!*\
+  !*** ./resources/js/components/EntryOverlay.jsx ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _FormRow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormRow */ "./resources/js/components/FormRow.jsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+
+
+var EntryOverlay = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntryOverlay, _React$Component);
+
+  var _super = _createSuper(EntryOverlay);
+
+  function EntryOverlay(props) {
+    var _this;
+
+    _classCallCheck(this, EntryOverlay);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      timestamp: _this.props.initialTimestamp,
+      food: _this.props.initialFood,
+      calories: _this.props.initialCalories,
+      isCheat: _this.props.initialIsCheat
+    };
+    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(EntryOverlay, [{
+    key: "parseInputValue",
+    value: function parseInputValue(input) {
+      switch (input.type) {
+        case 'datetime-local':
+          return (0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputValToTimestamp)(input.value);
+
+        case 'number':
+          return parseInt(input.value);
+
+        case 'checkbox':
+          return input.checked;
+
+        default:
+          return input.value;
+      }
+    }
+  }, {
+    key: "handleInputChange",
+    value: function handleInputChange(e) {
+      this.setState(_defineProperty({}, e.target.name, this.parseInputValue(e.target)));
+    }
+  }, {
+    key: "handleCancel",
+    value: function handleCancel(e) {
+      console.log('cancel');
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      console.log('submit');
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        className: "entry-overlay",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          className: "entry-overlay__blocker"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
+          className: "entry-overlay__form",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("table", {
+            className: "entry-overlay__table",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tbody", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                labelForId: "entry-overlay__date",
+                label: "Date",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                  id: "entry-overlay__date",
+                  type: "datetime-local",
+                  name: "timestamp",
+                  value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.timestamp),
+                  onChange: this.handleInputChange,
+                  required: true
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                labelForId: "entry-overlay__name",
+                label: "Food",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                  id: "entry-overlay__name",
+                  type: "text",
+                  name: "food",
+                  maxLength: constants.entries.name_max_length,
+                  value: this.state.food,
+                  onChange: this.handleInputChange,
+                  required: true
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                labelForId: "entry-overlay__cals",
+                label: "Calories",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                  id: "entry-overlay__cals",
+                  type: "number",
+                  name: "calories",
+                  min: "1",
+                  max: constants.entries.max_calories,
+                  value: this.state.calories,
+                  onChange: this.handleInputChange,
+                  required: true
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                labelForId: "entry-overlay__cheat",
+                label: "Cheat",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("label", {
+                  className: "entry-overlay__checkbox",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+                    id: "entry-overlay__cheat",
+                    name: "isCheat",
+                    className: "invisible",
+                    type: "checkbox",
+                    checked: this.state.isCheat,
+                    onChange: this.handleInputChange
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                    children: "\u2713"
+                  })]
+                })
+              })]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+            className: "entry-overlay__btns",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+              className: "btn btn--light btn--small",
+              type: "button",
+              value: "Cancel",
+              onClick: function onClick(e) {
+                return _this2.handleCancel(e);
+              }
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
+              className: "btn btn--dark btn--small",
+              type: "submit",
+              value: "Confirm",
+              onClick: function onClick(e) {
+                return _this2.handleSubmit(e);
+              }
+            })]
+          })]
+        })]
+      });
+    }
+  }]);
+
+  return EntryOverlay;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EntryOverlay);
+
+/***/ }),
+
+/***/ "./resources/js/components/FormRow.jsx":
+/*!*********************************************!*\
+  !*** ./resources/js/components/FormRow.jsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+function FormRow(props) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("tr", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
+        htmlFor: props.labelForId,
+        children: [props.label, ":"]
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("td", {
+      children: props.children
+    })]
+  });
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormRow);
+
+/***/ }),
+
+/***/ "./resources/js/utils.js":
+/*!*******************************!*\
+  !*** ./resources/js/utils.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "inputValToTimestamp": () => (/* binding */ inputValToTimestamp),
+/* harmony export */   "timestampToInputVal": () => (/* binding */ timestampToInputVal),
+/* harmony export */   "toRelativeLocaleDateString": () => (/* binding */ toRelativeLocaleDateString)
+/* harmony export */ });
+/**
+ * @param {number} timestamp 
+ * @param {boolean} dateOnly 
+ * @returns a string that can be passed to the value parameter of a datetime HTML input.
+ */
+var timestampToInputVal = function timestampToInputVal(timestamp) {
+  var dateOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var timezoneOffset = new Date().getTimezoneOffset() * 60000; // convert offset to milliseconds
+
+  return new Date(timestamp - timezoneOffset).toISOString().substring(0, dateOnly ? 10 : 16);
+};
+/**
+ * @param {string} value 
+ * @returns the timestamp representation of the given datetime HTML input value.
+ */
+
+var inputValToTimestamp = function inputValToTimestamp(value) {
+  return new Date(value).getTime();
+};
+/**
+ * @param {Date} date 
+ * @param {string | string[]} locales 
+ * @param {Intl.DateTimeFormatOptions} options 
+ * @returns 'Today', 'Yesterday', 'Tomorrow' etc. if date is within 1 week of current date.
+ */
+
+var toRelativeLocaleDateString = function toRelativeLocaleDateString(date, locales) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var timelessDate = new Date(date.valueOf()).setHours(0, 0, 0, 0); // remove time
+
+  var comp = new Date().setHours(0, 0, 0, 0); // compare to today
+
+  if (timelessDate === comp) return 'Today';
+  var dayMs = 86400000;
+
+  if (timelessDate > comp) {
+    // in the future
+    comp += dayMs; // tomorrow
+
+    if (timelessDate === comp) return 'Tomorrow';
+    comp += 6 * dayMs; // today next week
+
+    if (timelessDate < comp) return date.toLocaleDateString(locales, {
+      weekday: 'long'
+    });
+  } else {
+    // in the past
+    comp -= dayMs; // yesterday
+
+    if (timelessDate === comp) return 'Yesterday';
+    comp -= 6 * dayMs; // today last week
+
+    if (timelessDate > comp) return date.toLocaleDateString(locales, {
+      weekday: 'long'
+    });
+  }
+
+  return date.toLocaleDateString(locales, options);
+};
 
 /***/ }),
 

@@ -19,4 +19,14 @@ class User extends Authenticatable
     protected $hidden = [
         'remember_token',
     ];
+    
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'daily_calorie_limit' => 'integer',
+        'is_admin' => 'boolean',
+    ];
 }

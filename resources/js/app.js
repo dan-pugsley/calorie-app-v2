@@ -1,2 +1,2 @@
 require('./bootstrap');
-require('./components/tic-tac-toe');
+require('./components/EntriesPage');

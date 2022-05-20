@@ -65,7 +65,7 @@ class EntryController extends Controller
         ];
 
         if ($userId)
-            $output['daily_calorie_limit'] = User::where('id', $userId)->get('daily_calorie_limit');
+            $output['daily_calorie_limit'] = $user->daily_calorie_limit;
 
         return $output;
     }

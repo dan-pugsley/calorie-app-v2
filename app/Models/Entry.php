@@ -21,4 +21,15 @@ class Entry extends Model
         'is_cheat',
         'created_at',
     ];
+    
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user_id' => 'integer',
+        'calories' => 'integer',
+        'is_cheat' => 'boolean',
+    ];
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        @section('head')
         <!-- General -->
         <title>@yield('title') - Calorie app v2</title>
         <meta charset="UTF-8" />
@@ -9,15 +10,16 @@
 
         <!-- Core -->
         <script src="{{ mix('/js/app.js') }}" defer></script>
+        <script>const constants = {{ Js::from(config('constants')) }};</script>
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap">
+        @show
     </head>
     <body>
         @yield('content')
-        <div id="root"></div>
     </body>
 </html>
