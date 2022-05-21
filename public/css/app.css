@@ -12,7 +12,8 @@
 }
 
 .box-shadow {
-    box-shadow: var(--box-shadow);
+    -webkit-box-shadow: var(--box-shadow);
+            box-shadow: var(--box-shadow);
 }
 
 .no-select {
@@ -35,14 +36,16 @@
 .ellipsis {
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+       text-overflow: ellipsis;
 }
 
 .ellipsis-multiline {
     --max-lines: 2;
 
    overflow: hidden;
-   text-overflow: ellipsis;
+   -o-text-overflow: ellipsis;
+      text-overflow: ellipsis;
    display: -webkit-box;
    -webkit-box-orient: vertical;
    -webkit-line-clamp: var(--max-lines);
@@ -50,15 +53,28 @@
 }
 
 .flex-center {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .flex-column {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 body {
@@ -69,9 +85,18 @@ body {
     margin: 0;
     padding: 62px 74px 86px;
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     background: var(--col-light-blue);
 
@@ -89,8 +114,15 @@ hr {
 .content {
     max-width: 100%;
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 
 .btn {
@@ -137,10 +169,17 @@ input[type=date].btn {
 /* ——— Control ——— */
 
 .control {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 }
 
 .control__filters {
@@ -178,12 +217,18 @@ input[type=date].btn {
 /* ——— Days ——— */
 
 .day-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 
 .day-list__loading {
-    align-self: center;
+    -ms-flex-item-align: center;
+        align-self: center;
 
     font-weight: 600;
     font-size: 20px;
@@ -203,8 +248,12 @@ input[type=date].btn {
 }
 
 .day__header {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     height: 39px;
     padding-left: 23px;
@@ -218,12 +267,18 @@ input[type=date].btn {
 }
 
 .day__name {
-    flex: 1;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
 }
 
 .day__cal-count {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     margin: 0 15px;
 }
@@ -234,15 +289,26 @@ input[type=date].btn {
 }
 
 .day__chevron {
+    -webkit-transition: -webkit-transform 0.15s ease-out;
+    transition: -webkit-transform 0.15s ease-out;
+    -o-transition: transform 0.15s ease-out;
     transition: transform 0.15s ease-out;
+    transition: transform 0.15s ease-out, -webkit-transform 0.15s ease-out;
 }
 input:checked ~ .day__chevron {
-    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+            transform: rotate(180deg);
 }
 
 .day__entry-list {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 
     padding: 20px 23px 20px 47px;
 
@@ -253,8 +319,12 @@ input:checked ~ .day__chevron {
 /* ——— Entries ——— */
 
 .entry {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     padding-left: 16px;
     min-height: 36px;
@@ -267,11 +337,20 @@ input:checked ~ .day__chevron {
 }
 
 .entry__data {
-    flex: 1;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
 
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 
     font-size: 18px;
     line-height: 25px;
@@ -287,7 +366,9 @@ input:checked ~ .day__chevron {
 .entry__overflow-btn {
     all: unset;
 
-    align-self: stretch;
+    -ms-flex-item-align: stretch;
+
+        align-self: stretch;
 
     width: 39px;
 
@@ -296,13 +377,20 @@ input:checked ~ .day__chevron {
 
 /* flexbox */
 .entry__overflow-btn > div {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .load-more-btn {
-    align-self: center;
+    -ms-flex-item-align: center;
+        align-self: center;
 
     margin-top: 30px;
 }
@@ -314,14 +402,22 @@ input:checked ~ .day__chevron {
     position: absolute;
     left: 0; top: 0;
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 
     padding: 4px 0;
 
     background: var(--col-light-blue);
     border-radius: 7px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
 }
 
 .overflow-menu > input {
@@ -350,9 +446,17 @@ input:checked ~ .day__chevron {
     height: 100%;
     width: 100%;
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .entry-overlay__blocker {
@@ -369,13 +473,21 @@ input:checked ~ .day__chevron {
     position: absolute;
     padding: 22px 21px 17px;
 
+    display: -webkit-box;
+
+    display: -ms-flexbox;
+
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     
     background: var(--col-blue);
     border: 1px solid white;
     border-radius: 14px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
 }
 
 .entry-overlay__table {
@@ -411,10 +523,17 @@ input:checked ~ .day__chevron {
 
     padding: 2.5px 10px;
     min-height: 27px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
 
     display: flex;
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     background: white;
     border-radius: 7px;
@@ -428,7 +547,11 @@ input:checked ~ .day__chevron {
     width: 27px;
     cursor: pointer;
 
-    justify-content: center;
+    -webkit-box-pack: center;
+
+        -ms-flex-pack: center;
+
+            justify-content: center;
 }
 
 .entry-overlay__checkbox > input:not(:checked) ~ span {
@@ -436,9 +559,14 @@ input:checked ~ .day__chevron {
 }
 
 .entry-overlay__btns {
-    align-self: flex-end;
+    -ms-flex-item-align: end;
+        align-self: flex-end;
 
     margin-top: 25px;
+
+    display: -webkit-box;
+
+    display: -ms-flexbox;
 
     display: flex;
 }
@@ -456,9 +584,15 @@ input:checked ~ .day__chevron {
 }
 
 .stat {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 
     padding: 6px 23px;
 

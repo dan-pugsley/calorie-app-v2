@@ -37,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/dnpgsly/calorie-app-v2/issues"
   },
-  "homepage": "https://github.com/dnpgsly/calorie-app-v2#readme"
+  "homepage": "https://github.com/dnpgsly/calorie-app-v2#readme",
+  "browserslist": [
+    "last 3 versions"
+  ]
 }
