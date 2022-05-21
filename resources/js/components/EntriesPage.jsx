@@ -129,7 +129,7 @@ class EntriesPage extends React.Component {
     render() {
         return (
             <>
-                <div className="content" style={{width: '563px'}}>
+                <div className="content" style={{width: 563}}>
                     <EntriesControl
                         showUser={user.is_admin}
                         userId={this.state.userId}
@@ -164,10 +164,14 @@ class EntriesPage extends React.Component {
     }
 }
 
-ReactDOM.createRoot(document.getElementById('js-entries-page-root')).render(
-    <EntriesPage
-        initialUserId={user.id}
-        initialFromDate=""
-        initialToDate=""
-    />
-);
+const element = document.getElementById('js-entries-page-root');
+
+if (element) {
+    ReactDOM.createRoot(element).render(
+        <EntriesPage
+            initialUserId={user.id}
+            initialFromDate=""
+            initialToDate=""
+        />
+    );
+}
