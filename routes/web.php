@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return view('entries');
     });
     
-    Route::get('/report', function () {
+    Route::middleware('admin')->get('/report', function () {
         return view('report');
     });
 });
