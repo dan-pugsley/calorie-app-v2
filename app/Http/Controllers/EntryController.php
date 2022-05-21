@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEntryRequest;
 use App\Http\Requests\UpdateEntryRequest;
-use App\Models\User;
 use App\Models\Entry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,14 +50,17 @@ class EntryController extends Controller
             'user_id' => $userIdRules,
         ]);
 
-        if (is_null($userId) || !$user->is_admin)
+        if (is_null($userId))
             $userId = $user->id;
+
+        if ($userId != $user->id && !$user->is_admin)
+            abort(403, 'This action is unauthorized.');
 
         $conditions = [];
 
         if ($userId) $conditions[] = ['user_id', '=', $userId];
-        if ($fromTs) $conditions[] = ['created_at', '>', Carbon::createFromTimestamp($fromTs)];
-        if ($toTs) $conditions[] = ['created_at', '<=', Carbon::createFromTimestamp($toTs)];
+        if ($fromTs) $conditions[] = ['created_at', '>', Carbon::createFromTimestamp($fromTs / 1000)];
+        if ($toTs) $conditions[] = ['created_at', '<=', Carbon::createFromTimestamp($toTs / 1000)];
 
         $output = [
             'entries' => Entry::where($conditions)->orderByDesc('created_at')->get()
@@ -78,17 +80,23 @@ class EntryController extends Controller
      */
     public function store(StoreEntryRequest $request)
     {
+        $user = $request->user();
         $safe = $request->safe();
 
+        $targetUserId = $safe['user_id'] ?? $user->id;
+
+        if ($targetUserId != $user->id && !$user->is_admin)
+            abort(403, 'This action is unauthorized.');
+
         $params = [
-            'user_id' => $request->user()->id,
+            'user_id' => $targetUserId,
             'name' => $safe['name'],
             'calories' => $safe['calories'],
             'is_cheat' => $safe['is_cheat'],
         ];
 
-        if (isset($safe['created_at']))
-            $params[] = $safe['created_at'];
+        if (isset($safe['created_at_ts']))
+            $params['created_at'] = Carbon::createFromTimestamp($safe['created_at_ts'] / 1000);
 
         $entry = Entry::create($params);
 
@@ -122,7 +130,7 @@ class EntryController extends Controller
         if (isset($safe['name'])) $entry->name = $safe['name'];
         if (isset($safe['calories'])) $entry->calories = $safe['calories'];
         if (isset($safe['is_cheat'])) $entry->is_cheat = $safe['is_cheat'];
-        if (isset($safe['created_at'])) $entry->created_at = $safe['created_at'];
+        if (isset($safe['created_at_ts'])) $entry->created_at = Carbon::createFromTimestamp($safe['created_at_ts'] / 1000);
 
         $entry->save();
 

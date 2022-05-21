@@ -1,4 +1,16 @@
 /**
+ * @param {object} input 
+ * @returns the input value cast to the correct data type (e.g. number, boolean), based on the input type.
+ */
+export const parseInputValue = input => {
+    switch (input.type) {
+        case 'checkbox': return input.checked;
+        case 'number': return Number(input.value);
+        default: return input.value;
+    }
+}
+
+/**
  * @param {number} timestamp 
  * @param {boolean} dateOnly 
  * @returns a string that can be passed to the value parameter of a datetime HTML input.
@@ -10,7 +22,7 @@ export const timestampToInputVal = (timestamp, dateOnly = false) => {
 
 /**
  * @param {string} value 
- * @returns the timestamp representation of the given datetime HTML input value.
+ * @returns the timestamp representation (in milliseconds) of the given datetime HTML input value.
  */
 export const inputValToTimestamp = value => {
     return new Date(value).getTime();
@@ -41,8 +53,7 @@ export const toRelativeLocaleDateString = (date, locales, options = {}) => {
 
         if (timelessDate < comp)
             return date.toLocaleDateString(locales, {weekday: 'long'});
-    }
-    else { // in the past
+    } else { // in the past
         comp -= dayMs; // yesterday
 
         if (timelessDate === comp)

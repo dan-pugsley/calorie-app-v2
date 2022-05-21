@@ -30,7 +30,8 @@ class StoreEntryRequest extends FormRequest
             'name' => "required|string|max:$nameMaxLength",
             'calories' => "required|integer|between:1,$maxCalories",
             'is_cheat' => 'required|boolean',
-            'created_at' => 'integer|min:0|nullable',
+            'created_at_ts' => 'integer|min:0|nullable',
+            'user_id' => 'integer|exists:users,id|nullable',
         ];
     }
 }

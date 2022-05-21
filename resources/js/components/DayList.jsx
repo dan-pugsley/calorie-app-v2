@@ -1,71 +1,61 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
 import Day from './Day';
+import {toRelativeLocaleDateString} from '../utils';
 
-class DayList extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            error: null,
-            isLoaded: false,
-            data: []
-        };
-        this.abortController = new AbortController();
-    }
+function DayList(props) {
+    if (props.error)
+        return <span className="day-list__loading">{props.error.response.data.message}</span>;
 
-    componentDidMount() {
-        this.fetchEntries();
-    }
-    
-    componentDidUpdate() {
-        //this.fetchEntries();
-    }
+    if (props.isLoading)
+        return <span className="day-list__loading">Loading...</span>;
 
-    fetchEntries() {
-        let url = '/api/entries/0/0';
+    const days = [];
+    const entries = props.data.entries;
+    const locale = 'en-US';
 
-        if (this.props.userId)
-            url += '/' + this.state.userId;
+    let currDate = null;
+    let currDayEntries = [];
 
-        axios.get(url, {
-            signal: this.abortController.signal
-        })
-        .then(res => {
-            this.setState({
-                isLoaded: true,
-                data: res.data
-            });
-        })
-        .catch(error => {
-            this.setState({
-                isLoaded: true,
-                error
-            });
+    const bankDay = function() {
+        if (currDate) {
+            days.push(
+                <Day
+                    key={currDate}
+                    name={currDate}
+                    calorieLimit={props.data.daily_calorie_limit}
+                    entries={currDayEntries}
+                    onClickEntryOverflow={props.onClickEntryOverflow}
+                    showUser={props.showUser}
+                />
+            );
+        }
+    };
+
+    for (let i = 0; i < entries.length; ++i)
+    {
+        const entry = entries[i];
+        const dateTime = new Date(entry.created_at);
+        const date = toRelativeLocaleDateString(dateTime, locale);
+
+        if (currDate !== date) {
+            bankDay();
+            currDayEntries = [];
+            currDate = date;
+        }
+
+        /**
+         * While we have a dateTime representation of the entry, 
+         * pass the formatted version into the data object.
+         */
+        entry.time = dateTime.toLocaleTimeString(locale, {
+            hour: 'numeric',
+            minute: 'numeric'
         });
+
+        currDayEntries.push(entry);
     }
 
-    componentWillUnmount() {
-        this.abortController.abort();
-    }
-
-    renderDay(name, entries) {
-        return <Day name={name} entries={entries} showUser={this.props.showUser} />;
-    }
-
-    render() {
-        if (this.state.error)
-            return <div>Error: {this.state.error.message}</div>;
-
-        if (!this.state.isLoaded)
-            return <span className="day-list__loading">Loading...</span>;
-        
-        return (
-            <>
-                {this.renderDay('Tuesday', this.state.data.entries)}
-                {this.renderDay('Monday', this.state.data.entries)}
-            </>
-        );
-    }
+    bankDay();
+    return days;
 }
 
-//ReactDOM.createRoot(document.querySelector('.js-day-list')).render(<DayList />);
+export default DayList;

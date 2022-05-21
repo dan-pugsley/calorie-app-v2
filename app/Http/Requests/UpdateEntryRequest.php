@@ -30,7 +30,7 @@ class UpdateEntryRequest extends FormRequest
             'name' => "string|max:$nameMaxLength",
             'calories' => "integer|between:1,$maxCalories",
             'is_cheat' => 'boolean',
-            'created_at' => 'integer|min:0|nullable',
+            'created_at_ts' => 'integer|min:0|nullable',
         ];
     }
 }

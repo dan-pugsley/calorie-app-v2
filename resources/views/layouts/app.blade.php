@@ -10,7 +10,10 @@
 
         <!-- Core -->
         <script src="{{ mix('/js/app.js') }}" defer></script>
-        <script>const constants = {{ Js::from(config('constants')) }};</script>
+        <script>
+            const constants = {{ Js::from(config('constants')) }};
+            const user = {{ Js::from(Auth::user()) }};
+        </script>
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 
         <!-- Fonts -->

@@ -1,24 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import EntriesControl from './EntriesControl';
-import Day from './Day';
+import DayList from './DayList';
 import EntryOverlay from './EntryOverlay';
+import EntryOverflowMenu from './EntryOverflowMenu';
 import axios from 'axios';
-import {toRelativeLocaleDateString} from '../utils';
+import {parseInputValue, inputValToTimestamp, timestampToInputVal} from '../utils';
 
 class EntriesPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: props.initialUserId,
+            fromDate: props.initialFromDate,
+            toDate: props.initialToDate,
             isLoading: true,
             data: null,
             error: null,
             isOverlayOpen: false,
+            isOverflowMenuOpen: false,
+            overflowMenuTarget: null,
+            overflowMenuEntryData: null,
         };
     }
 
-    componentDidMount() {
-        axios.get('api/entries')
+    fetchEntries() {
+        let fromTimestamp = inputValToTimestamp(this.state.fromDate);
+        let toTimestamp = inputValToTimestamp(this.state.toDate);
+
+        if (isNaN(fromTimestamp)) fromTimestamp = 0;
+        if (isNaN(toTimestamp)) toTimestamp = 0;
+
+        axios.get(`api/entries/${fromTimestamp}/${toTimestamp}/${this.state.userId}`)
             .then(res => {
                 this.setState({
                     isLoading: false,
@@ -33,82 +46,128 @@ class EntriesPage extends React.Component {
             });
     }
 
-    renderDayList() {
-        if (this.state.isLoading)
-            return <span className="day-list__loading">Loading...</span>;
+    componentDidMount() {
+        this.fetchEntries();
+    }
 
-        const days = [];
-        const entries = this.state.data.entries;
+    handleControlInputChange(e) {
+        this.setState({
+            [e.target.name]: parseInputValue(e.target),
+            isLoading: true,
+            error: null
+        }, this.fetchEntries);
+    }
 
-        let currDate = null;
-        let currDayEntries = [];
-    
-        for (let i = 0; i < entries.length; ++i)
-        {
-            const entry = entries[i];
-            const dateTimeParts = entry.created_at.split(/[^0-9]/);
-            const dateTime = new Date(
-                dateTimeParts[0],
-                dateTimeParts[1] - 1,
-                dateTimeParts[2],
-                dateTimeParts[3],
-                dateTimeParts[4],
-                dateTimeParts[5]);
-                
-            const date = toRelativeLocaleDateString(dateTime, 'en-US');
-    
-            if (currDate !== date) {
-                if (currDate) {
-                    days.push(
-                        <Day
-                            key={currDate}
-                            name={currDate}
-                            calorieLimit={this.state.data.daily_calorie_limit}
-                            entries={currDayEntries}
-                            showUser={false}
-                        />
-                    );
-                }
+    handleClickAddEntry() {
+        this.setState({
+            isOverlayOpen: true,
+            overflowMenuEntryData: null
+        });
+    }
 
-                currDayEntries = [];
-                currDate = date;
-            }
+    handleClickEntryOverflow(data, button) {
+        this.setState({
+            isOverflowMenuOpen: true,
+            overflowMenuTarget: button,
+            overflowMenuEntryData: data,
+        });
+    }
 
-            currDayEntries.push(entry);
-        }
+    handleClickEntryEdit() {
+        this.setState({
+            isOverlayOpen: true,
+            isOverflowMenuOpen: false,
+        });
+    }
 
-        if (currDate)
-            days.push(<Day key={currDate} name={currDate} entries={currDayEntries} showUser={false} />);
+    handleClickEntryRemove() {
+        const data = this.state.overflowMenuEntryData;
+        if (!confirm(`Are you sure you want to remove '${data.name}'?`))
+            return;
+        this.setState({
+            isLoading: true,
+            isOverflowMenuOpen: false,
+        });
+        axios.delete('api/entries/' + data.id)
+            .then(res => {
+                if (res.data.deleted)
+                    this.fetchEntries();
+                else
+                    this.setState({isLoading: false});
+            })
+            .catch(error => {
+                this.setState({isLoading: false});
+                alert(error.response.data.message);
+            });
+    }
 
-        return days;
+    handleCloseEntryOverlay(update) {
+        this.setState({
+            isOverlayOpen: false,
+            isLoading: update,
+        });
+
+        if (update)
+            this.fetchEntries();
+    }
+
+    renderEntryOverlay() {
+        const data = this.state.overflowMenuEntryData;
+        return (
+            <EntryOverlay
+                id={data ? data.id : 0}
+                userId={data ? data.user_id : this.state.userId}
+                initialDateTime={data ? timestampToInputVal(new Date(data.created_at).getTime()) : timestampToInputVal(Date.now())}
+                initialFood={data ? data.name : ''}
+                initialCalories={data ? data.calories : ''}
+                initialIsCheat={data ? data.is_cheat : false}
+                handleClose={this.handleCloseEntryOverlay.bind(this)}
+            />
+        );
     }
 
     render() {
-        if (this.state.error)
-            return <div>Error: {this.state.error.message}</div>;
-
         return (
             <>
                 <div className="content" style={{width: '563px'}}>
-                    <EntriesControl initialUserId={1} showUser={true}/>
+                    <EntriesControl
+                        showUser={user.is_admin}
+                        userId={this.state.userId}
+                        fromDate={this.state.fromDate}
+                        toDate={this.state.toDate}
+                        showAddButton={this.state.userId > 0}
+                        onInputChange={e => this.handleControlInputChange(e)}
+                        onClickAddEntry={() => this.handleClickAddEntry()}
+                    />
                     <hr/>
-                    <div className="day-list">{this.renderDayList()}</div>
+                    <div className="day-list">
+                        <DayList
+                            error={this.state.error}
+                            isLoading={this.state.isLoading}
+                            data={this.state.data}
+                            onClickEntryOverflow={this.handleClickEntryOverflow.bind(this)}
+                            showUser={this.state.userId === 0}
+                        />    
+                    </div>
                 </div>
-                <div className="overflow-menu hidden js-overflow-menu">
-                    <input className="js-edit-btn" type="button" value="Edit"/> 
-                    <input className="js-remove-btn" type="button" value="Remove"/>
-                </div>
-                {this.state.isOverlayOpen &&
-                    <EntryOverlay
-                        initialTimestamp={Date.now()}
-                        initialFood=""
-                        initialCalories=""
-                        initialIsCheat={false}
+                {this.state.isOverflowMenuOpen &&
+                    <EntryOverflowMenu
+                        target={this.state.overflowMenuTarget}
+                        onMouseLeave={() => this.setState({isOverflowMenuOpen: false})}
+                        onClickEdit={() => this.handleClickEntryEdit()}
+                        onClickRemove={() => this.handleClickEntryRemove()}
                     />
                 }
+                {this.state.isOverlayOpen && this.renderEntryOverlay()}
             </>
         );
     }
 }
 
-ReactDOM.createRoot(document.body).render(<EntriesPage />);
+ReactDOM.createRoot(document.getElementById('js-entries-page-root')).render(
+    <EntriesPage
+        initialUserId={user.id}
+        initialFromDate=""
+        initialToDate=""
+    />
+);

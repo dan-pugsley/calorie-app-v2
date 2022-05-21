@@ -18,16 +18,17 @@ class Day extends React.PureComponent {
     }
 
     renderEntries() {
-        return this.props.entries.map(data => {
+        return this.props.entries.map((data, index) => {
             return (
                 <Entry
                     key={data.id}
                     userId={data.user_id}
-                    time="09:00"
+                    time={data.time}
                     name={data.name}
                     calories={data.calories}
                     isCheat={data.is_cheat}
                     showUser={this.props.showUser}
+                    onClickOverflow={button => this.props.onClickEntryOverflow(data, button)}
                 />
             );
         });

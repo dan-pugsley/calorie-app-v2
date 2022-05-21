@@ -2278,14 +2278,17 @@ var Day = /*#__PURE__*/function (_React$PureComponent) {
     value: function renderEntries() {
       var _this2 = this;
 
-      return this.props.entries.map(function (data) {
+      return this.props.entries.map(function (data, index) {
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_Entry__WEBPACK_IMPORTED_MODULE_1__["default"], {
           userId: data.user_id,
-          time: "09:00",
+          time: data.time,
           name: data.name,
           calories: data.calories,
           isCheat: data.is_cheat,
-          showUser: _this2.props.showUser
+          showUser: _this2.props.showUser,
+          onClickOverflow: function onClickOverflow(button) {
+            return _this2.props.onClickEntryOverflow(data, button);
+          }
         }, data.id);
       });
     }
@@ -2344,6 +2347,82 @@ var Day = /*#__PURE__*/function (_React$PureComponent) {
 
 /***/ }),
 
+/***/ "./resources/js/components/DayList.jsx":
+/*!*********************************************!*\
+  !*** ./resources/js/components/DayList.jsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Day__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Day */ "./resources/js/components/Day.jsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+
+function DayList(props) {
+  if (props.error) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+    className: "day-list__loading",
+    children: props.error.response.data.message
+  });
+  if (props.isLoading) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+    className: "day-list__loading",
+    children: "Loading..."
+  });
+  var days = [];
+  var entries = props.data.entries;
+  var locale = 'en-US';
+  var currDate = null;
+  var currDayEntries = [];
+
+  var bankDay = function bankDay() {
+    if (currDate) {
+      days.push( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_Day__WEBPACK_IMPORTED_MODULE_0__["default"], {
+        name: currDate,
+        calorieLimit: props.data.daily_calorie_limit,
+        entries: currDayEntries,
+        onClickEntryOverflow: props.onClickEntryOverflow,
+        showUser: props.showUser
+      }, currDate));
+    }
+  };
+
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    var dateTime = new Date(entry.created_at);
+    var date = (0,_utils__WEBPACK_IMPORTED_MODULE_1__.toRelativeLocaleDateString)(dateTime, locale);
+
+    if (currDate !== date) {
+      bankDay();
+      currDayEntries = [];
+      currDate = date;
+    }
+    /**
+     * While we have a dateTime representation of the entry, 
+     * pass the formatted version into the data object.
+     */
+
+
+    entry.time = dateTime.toLocaleTimeString(locale, {
+      hour: 'numeric',
+      minute: 'numeric'
+    });
+    currDayEntries.push(entry);
+  }
+
+  bankDay();
+  return days;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DayList);
+
+/***/ }),
+
 /***/ "./resources/js/components/EntriesControl.jsx":
 /*!****************************************************!*\
   !*** ./resources/js/components/EntriesControl.jsx ***!
@@ -2358,8 +2437,126 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _FormRow__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormRow */ "./resources/js/components/FormRow.jsx");
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+
+var EntriesControl = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntriesControl, _React$Component);
+
+  var _super = _createSuper(EntriesControl);
+
+  function EntriesControl() {
+    _classCallCheck(this, EntriesControl);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(EntriesControl, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        className: "control",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("table", {
+          className: "control__filters",
+          cellSpacing: "0",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("tbody", {
+            children: [this.props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__user",
+              label: "User",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+                id: "control__user",
+                className: "btn",
+                type: "number",
+                name: "userId",
+                value: this.props.userId,
+                onChange: this.props.onInputChange,
+                min: "0"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__from-date",
+              label: "From",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+                id: "control__from-date",
+                className: "btn",
+                type: "date",
+                name: "fromDate",
+                value: this.props.fromDate,
+                onChange: this.props.onInputChange
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
+              labelForId: "control__to-date",
+              label: "To",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+                id: "control__to-date",
+                className: "btn",
+                type: "date",
+                name: "toDate",
+                value: this.props.toDate,
+                onChange: this.props.onInputChange
+              })
+            })]
+          })
+        }), this.props.showAddButton && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          className: "btn btn--dark",
+          type: "button",
+          value: "+ Add entry",
+          onClick: this.props.onClickAddEntry
+        })]
+      });
+    }
+  }]);
+
+  return EntriesControl;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EntriesControl);
+
+/***/ }),
+
+/***/ "./resources/js/components/EntriesPage.jsx":
+/*!*************************************************!*\
+  !*** ./resources/js/components/EntriesPage.jsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _EntriesControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EntriesControl */ "./resources/js/components/EntriesControl.jsx");
+/* harmony import */ var _DayList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DayList */ "./resources/js/components/DayList.jsx");
+/* harmony import */ var _EntryOverlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EntryOverlay */ "./resources/js/components/EntryOverlay.jsx");
+/* harmony import */ var _EntryOverflowMenu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./EntryOverflowMenu */ "./resources/js/components/EntryOverflowMenu.jsx");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -2390,125 +2587,218 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var EntriesControl = /*#__PURE__*/function (_React$Component) {
-  _inherits(EntriesControl, _React$Component);
 
-  var _super = _createSuper(EntriesControl);
 
-  function EntriesControl(props) {
+
+
+
+
+var EntriesPage = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntriesPage, _React$Component);
+
+  var _super = _createSuper(EntriesPage);
+
+  function EntriesPage(props) {
     var _this;
 
-    _classCallCheck(this, EntriesControl);
+    _classCallCheck(this, EntriesPage);
 
     _this = _super.call(this, props);
     _this.state = {
-      userId: _this.props.initialUserId,
-      fromTimestamp: '',
-      toTimestamp: Date.now()
+      userId: props.initialUserId,
+      fromDate: props.initialFromDate,
+      toDate: props.initialToDate,
+      isLoading: true,
+      data: null,
+      error: null,
+      isOverlayOpen: false,
+      isOverflowMenuOpen: false,
+      overflowMenuTarget: null,
+      overflowMenuEntryData: null
     };
-    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(EntriesControl, [{
-    key: "parseInputValue",
-    value: function parseInputValue(input) {
-      switch (input.type) {
-        case 'date':
-        case 'datetime-local':
-          return (0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputValToTimestamp)(input.value);
+  _createClass(EntriesPage, [{
+    key: "fetchEntries",
+    value: function fetchEntries() {
+      var _this2 = this;
 
-        case 'number':
-          return parseInt(input.value);
-
-        default:
-          return input.value;
-      }
+      var fromTimestamp = (0,_utils__WEBPACK_IMPORTED_MODULE_7__.inputValToTimestamp)(this.state.fromDate);
+      var toTimestamp = (0,_utils__WEBPACK_IMPORTED_MODULE_7__.inputValToTimestamp)(this.state.toDate);
+      if (isNaN(fromTimestamp)) fromTimestamp = 0;
+      if (isNaN(toTimestamp)) toTimestamp = 0;
+      axios__WEBPACK_IMPORTED_MODULE_6___default().get("api/entries/".concat(fromTimestamp, "/").concat(toTimestamp, "/").concat(this.state.userId)).then(function (res) {
+        _this2.setState({
+          isLoading: false,
+          data: res.data
+        });
+      })["catch"](function (error) {
+        _this2.setState({
+          isLoading: false,
+          error: error
+        });
+      });
     }
   }, {
-    key: "handleInputChange",
-    value: function handleInputChange(e) {
-      this.setState(_defineProperty({}, e.target.name, this.parseInputValue(e.target)));
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.fetchEntries();
+    }
+  }, {
+    key: "handleControlInputChange",
+    value: function handleControlInputChange(e) {
+      var _this$setState;
+
+      this.setState((_this$setState = {}, _defineProperty(_this$setState, e.target.name, (0,_utils__WEBPACK_IMPORTED_MODULE_7__.parseInputValue)(e.target)), _defineProperty(_this$setState, "isLoading", true), _defineProperty(_this$setState, "error", null), _this$setState), this.fetchEntries);
+    }
+  }, {
+    key: "handleClickAddEntry",
+    value: function handleClickAddEntry() {
+      this.setState({
+        isOverlayOpen: true,
+        overflowMenuEntryData: null
+      });
+    }
+  }, {
+    key: "handleClickEntryOverflow",
+    value: function handleClickEntryOverflow(data, button) {
+      this.setState({
+        isOverflowMenuOpen: true,
+        overflowMenuTarget: button,
+        overflowMenuEntryData: data
+      });
+    }
+  }, {
+    key: "handleClickEntryEdit",
+    value: function handleClickEntryEdit() {
+      this.setState({
+        isOverlayOpen: true,
+        isOverflowMenuOpen: false
+      });
+    }
+  }, {
+    key: "handleClickEntryRemove",
+    value: function handleClickEntryRemove() {
+      var _this3 = this;
+
+      var data = this.state.overflowMenuEntryData;
+      if (!confirm("Are you sure you want to remove '".concat(data.name, "'?"))) return;
+      this.setState({
+        isLoading: true,
+        isOverflowMenuOpen: false
+      });
+      axios__WEBPACK_IMPORTED_MODULE_6___default()["delete"]('api/entries/' + data.id).then(function (res) {
+        if (res.data.deleted) _this3.fetchEntries();else _this3.setState({
+          isLoading: false
+        });
+      })["catch"](function (error) {
+        _this3.setState({
+          isLoading: false
+        });
+
+        alert(error.response.data.message);
+      });
+    }
+  }, {
+    key: "handleCloseEntryOverlay",
+    value: function handleCloseEntryOverlay(update) {
+      this.setState({
+        isOverlayOpen: false,
+        isLoading: update
+      });
+      if (update) this.fetchEntries();
+    }
+  }, {
+    key: "renderEntryOverlay",
+    value: function renderEntryOverlay() {
+      var data = this.state.overflowMenuEntryData;
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_EntryOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        id: data ? data.id : 0,
+        userId: data ? data.user_id : this.state.userId,
+        initialDateTime: data ? (0,_utils__WEBPACK_IMPORTED_MODULE_7__.timestampToInputVal)(new Date(data.created_at).getTime()) : (0,_utils__WEBPACK_IMPORTED_MODULE_7__.timestampToInputVal)(Date.now()),
+        initialFood: data ? data.name : '',
+        initialCalories: data ? data.calories : '',
+        initialIsCheat: data ? data.is_cheat : false,
+        handleClose: this.handleCloseEntryOverlay.bind(this)
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-        className: "control",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("table", {
-          className: "control__filters",
-          cellSpacing: "0",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tbody", {
-            children: [this.props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
-              labelForId: "control__user",
-              label: "User",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-                id: "control__user",
-                className: "btn",
-                name: "userId",
-                type: "number",
-                value: this.state.userId,
-                onChange: this.handleInputChange,
-                min: "0"
-              })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
-              labelForId: "control__from-date",
-              label: "From",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-                id: "control__from-date",
-                className: "btn",
-                name: "fromTimestamp",
-                type: "date",
-                value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.fromTimestamp, true),
-                onChange: this.handleInputChange
-              })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
-              labelForId: "control__to-date",
-              label: "To",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-                id: "control__to-date",
-                className: "btn",
-                name: "toTimestamp",
-                type: "date",
-                value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.toTimestamp, true),
-                onChange: this.handleInputChange
-              })
-            })]
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-          className: "btn btn--dark",
-          type: "button",
-          value: "+ Add entry"
-        })]
+      var _this4 = this;
+
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+          className: "content",
+          style: {
+            width: '563px'
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_EntriesControl__WEBPACK_IMPORTED_MODULE_2__["default"], {
+            showUser: user.is_admin,
+            userId: this.state.userId,
+            fromDate: this.state.fromDate,
+            toDate: this.state.toDate,
+            showAddButton: this.state.userId > 0,
+            onInputChange: function onInputChange(e) {
+              return _this4.handleControlInputChange(e);
+            },
+            onClickAddEntry: function onClickAddEntry() {
+              return _this4.handleClickAddEntry();
+            }
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+            className: "day-list",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_DayList__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              error: this.state.error,
+              isLoading: this.state.isLoading,
+              data: this.state.data,
+              onClickEntryOverflow: this.handleClickEntryOverflow.bind(this),
+              showUser: this.state.userId === 0
+            })
+          })]
+        }), this.state.isOverflowMenuOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_EntryOverflowMenu__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          target: this.state.overflowMenuTarget,
+          onMouseLeave: function onMouseLeave() {
+            return _this4.setState({
+              isOverflowMenuOpen: false
+            });
+          },
+          onClickEdit: function onClickEdit() {
+            return _this4.handleClickEntryEdit();
+          },
+          onClickRemove: function onClickRemove() {
+            return _this4.handleClickEntryRemove();
+          }
+        }), this.state.isOverlayOpen && this.renderEntryOverlay()]
       });
     }
   }]);
 
-  return EntriesControl;
+  return EntriesPage;
 }((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EntriesControl);
+react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.getElementById('js-entries-page-root')).render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(EntriesPage, {
+  initialUserId: user.id,
+  initialFromDate: "",
+  initialToDate: ""
+}));
 
 /***/ }),
 
-/***/ "./resources/js/components/EntriesPage.jsx":
-/*!*************************************************!*\
-  !*** ./resources/js/components/EntriesPage.jsx ***!
-  \*************************************************/
+/***/ "./resources/js/components/Entry.jsx":
+/*!*******************************************!*\
+  !*** ./resources/js/components/Entry.jsx ***!
+  \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _EntriesControl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EntriesControl */ "./resources/js/components/EntriesControl.jsx");
-/* harmony import */ var _Day__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Day */ "./resources/js/components/Day.jsx");
-/* harmony import */ var _EntryOverlay__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EntryOverlay */ "./resources/js/components/EntryOverlay.jsx");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2535,143 +2825,75 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+var Entry = /*#__PURE__*/function (_React$PureComponent) {
+  _inherits(Entry, _React$PureComponent);
 
+  var _super = _createSuper(Entry);
 
-
-
-
-
-
-var EntriesPage = /*#__PURE__*/function (_React$Component) {
-  _inherits(EntriesPage, _React$Component);
-
-  var _super = _createSuper(EntriesPage);
-
-  function EntriesPage(props) {
+  function Entry(props) {
     var _this;
 
-    _classCallCheck(this, EntriesPage);
+    _classCallCheck(this, Entry);
 
     _this = _super.call(this, props);
-    _this.state = {
-      isLoading: true,
-      data: null,
-      error: null,
-      isOverlayOpen: false
-    };
+    _this.overflowButton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     return _this;
   }
 
-  _createClass(EntriesPage, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_5___default().get('api/entries').then(function (res) {
-        _this2.setState({
-          isLoading: false,
-          data: res.data
-        });
-      })["catch"](function (error) {
-        _this2.setState({
-          isLoading: false,
-          error: error
-        });
-      });
-    }
-  }, {
-    key: "renderDayList",
-    value: function renderDayList() {
-      if (this.state.isLoading) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
-        className: "day-list__loading",
-        children: "Loading..."
-      });
-      var days = [];
-      var entries = this.state.data.entries;
-      var currDate = null;
-      var currDayEntries = [];
-
-      for (var i = 0; i < entries.length; ++i) {
-        var entry = entries[i];
-        var dateTimeParts = entry.created_at.split(/[^0-9]/);
-        var dateTime = new Date(dateTimeParts[0], dateTimeParts[1] - 1, dateTimeParts[2], dateTimeParts[3], dateTimeParts[4], dateTimeParts[5]);
-        var date = (0,_utils__WEBPACK_IMPORTED_MODULE_6__.toRelativeLocaleDateString)(dateTime, 'en-US');
-
-        if (currDate !== date) {
-          if (currDate) {
-            days.push( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Day__WEBPACK_IMPORTED_MODULE_3__["default"], {
-              name: currDate,
-              calorieLimit: this.state.data.daily_calorie_limit,
-              entries: currDayEntries,
-              showUser: false
-            }, currDate));
-          }
-
-          currDayEntries = [];
-          currDate = date;
-        }
-
-        currDayEntries.push(entry);
-      }
-
-      if (currDate) days.push( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_Day__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        name: currDate,
-        entries: currDayEntries,
-        showUser: false
-      }, currDate));
-      return days;
-    }
-  }, {
+  _createClass(Entry, [{
     key: "render",
     value: function render() {
-      if (this.state.error) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-        children: ["Error: ", this.state.error.message]
-      });
-      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-          className: "content",
-          style: {
-            width: '563px'
+      var _this2 = this;
+
+      var classNames = ['entry'];
+      if (this.props.isCheat) classNames.push('entry--cheat');
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: classNames.join(' '),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          className: "entry__data",
+          children: [this.props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            children: this.props.userId
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            children: this.props.time
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            children: this.props.name
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            children: this.props.calories
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+          ref: this.overflowButton,
+          className: "entry__overflow-btn",
+          onClick: function onClick() {
+            return _this2.props.onClickOverflow(_this2.overflowButton.current);
           },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_EntriesControl__WEBPACK_IMPORTED_MODULE_2__["default"], {
-            initialUserId: 1,
-            showUser: true
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
-            className: "day-list",
-            children: this.renderDayList()
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-          className: "overflow-menu hidden js-overflow-menu",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("input", {
-            className: "js-edit-btn",
-            type: "button",
-            value: "Edit"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("input", {
-            className: "js-remove-btn",
-            type: "button",
-            value: "Remove"
-          })]
-        }), this.state.isOverlayOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_EntryOverlay__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          initialTimestamp: Date.now(),
-          initialFood: "",
-          initialCalories: "",
-          initialIsCheat: false
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("svg", {
+              viewBox: "0 0 5 17",
+              width: "5",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
+                fillRule: "evenodd",
+                clipRule: "evenodd",
+                d: "M.6 2a1.85 1.85 0 1 0 3.7 0A1.85 1.85 0 0 0 .6 2Zm1.85 8.3a1.85 1.85 0 1 1 0-3.68 1.85 1.85 0 0 1 0 3.69Zm0 6.47a1.85 1.85 0 1 1 0-3.7 1.85 1.85 0 0 1 0 3.7Z",
+                fill: "#023047"
+              })
+            })
+          })
         })]
       });
     }
   }]);
 
-  return EntriesPage;
-}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+  return Entry;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent));
 
-react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot(document.body).render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(EntriesPage, {}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Entry);
 
 /***/ }),
 
-/***/ "./resources/js/components/Entry.jsx":
-/*!*******************************************!*\
-  !*** ./resources/js/components/Entry.jsx ***!
-  \*******************************************/
+/***/ "./resources/js/components/EntryOverflowMenu.jsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/EntryOverflowMenu.jsx ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2679,50 +2901,103 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
-function Entry(props) {
-  var _this = this;
 
-  var classNames = ['entry'];
-  if (props.isCheat) classNames.push('entry--cheat');
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: classNames.join(' '),
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "entry__data",
-      children: [props.showUser && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: props.userId
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: props.time
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: props.name
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-        children: props.calories
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
-      className: "entry__overflow-btn",
-      onClick: function onClick(e) {
-        return _this.props.onClick(e);
-      },
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-          viewBox: "0 0 5 17",
-          width: "5",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            d: "M.6 2a1.85 1.85 0 1 0 3.7 0A1.85 1.85 0 0 0 .6 2Zm1.85 8.3a1.85 1.85 0 1 1 0-3.68 1.85 1.85 0 0 1 0 3.69Zm0 6.47a1.85 1.85 0 1 1 0-3.7 1.85 1.85 0 0 1 0 3.7Z",
-            fill: "#023047"
-          })
-        })
-      })
-    })]
-  });
-}
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Entry);
+var EntryOverflowMenu = /*#__PURE__*/function (_React$Component) {
+  _inherits(EntryOverflowMenu, _React$Component);
+
+  var _super = _createSuper(EntryOverflowMenu);
+
+  function EntryOverflowMenu(props) {
+    var _this;
+
+    _classCallCheck(this, EntryOverflowMenu);
+
+    _this = _super.call(this, props);
+    _this.state = {
+      width: 0
+    };
+    _this.ref = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    _this.handleWindowResize = _this.handleWindowResize.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(EntryOverflowMenu, [{
+    key: "handleWindowResize",
+    value: function handleWindowResize() {
+      this.forceUpdate();
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setState({
+        width: this.ref.current.offsetWidth
+      });
+      window.addEventListener('resize', this.handleWindowResize);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var targetRect = this.props.target.getBoundingClientRect();
+      var offsetTop = targetRect.y + document.documentElement.scrollTop;
+      var offsetLeft = targetRect.x + targetRect.width - this.state.width;
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        ref: this.ref,
+        className: "overflow-menu",
+        style: {
+          top: offsetTop,
+          left: offsetLeft
+        },
+        onMouseLeave: this.props.onMouseLeave,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "button",
+          value: "Edit",
+          onClick: this.props.onClickEdit
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "button",
+          value: "Remove",
+          onClick: this.props.onClickRemove
+        })]
+      });
+    }
+  }]);
+
+  return EntryOverflowMenu;
+}((react__WEBPACK_IMPORTED_MODULE_0___default().Component));
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EntryOverflowMenu);
 
 /***/ }),
 
@@ -2784,59 +3059,71 @@ var EntryOverlay = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call(this, props);
     _this.state = {
-      timestamp: _this.props.initialTimestamp,
+      dateTime: _this.props.initialDateTime,
       food: _this.props.initialFood,
       calories: _this.props.initialCalories,
-      isCheat: _this.props.initialIsCheat
+      isCheat: _this.props.initialIsCheat,
+      isSubmitting: false
     };
     _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(EntryOverlay, [{
-    key: "parseInputValue",
-    value: function parseInputValue(input) {
-      switch (input.type) {
-        case 'datetime-local':
-          return (0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputValToTimestamp)(input.value);
-
-        case 'number':
-          return parseInt(input.value);
-
-        case 'checkbox':
-          return input.checked;
-
-        default:
-          return input.value;
-      }
-    }
-  }, {
     key: "handleInputChange",
     value: function handleInputChange(e) {
-      this.setState(_defineProperty({}, e.target.name, this.parseInputValue(e.target)));
+      this.setState(_defineProperty({}, e.target.name, (0,_utils__WEBPACK_IMPORTED_MODULE_2__.parseInputValue)(e.target)));
     }
   }, {
     key: "handleCancel",
-    value: function handleCancel(e) {
-      console.log('cancel');
+    value: function handleCancel() {
+      if (this.state.isSubmitting) return;
+      this.props.handleClose(false);
     }
   }, {
     key: "handleSubmit",
     value: function handleSubmit(e) {
+      var _this2 = this;
+
       e.preventDefault();
-      console.log('submit');
+      this.setState({
+        isSubmitting: true
+      });
+      var params = {
+        name: this.state.food,
+        calories: this.state.calories,
+        is_cheat: this.state.isCheat,
+        created_at_ts: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputValToTimestamp)(this.state.dateTime),
+        user_id: this.props.userId
+      };
+      var request = this.props.id ? axios.put('api/entries/' + this.props.id, params) : axios.post('api/entries', params);
+      request.then(function (res) {
+        _this2.props.handleClose(res.data.id || res.data.changed);
+      })["catch"](function (error) {
+        _this2.setState({
+          isSubmitting: false
+        });
+
+        alert(error.response.data.message);
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
         className: "entry-overlay",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-          className: "entry-overlay__blocker"
+          className: "entry-overlay__blocker",
+          onClick: this.handleCancel
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
           className: "entry-overlay__form",
+          onSubmit: function onSubmit(e) {
+            return _this3.handleSubmit(e);
+          },
+          disabled: this.state.isSubmitting,
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("table", {
             className: "entry-overlay__table",
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("tbody", {
@@ -2846,8 +3133,8 @@ var EntryOverlay = /*#__PURE__*/function (_React$Component) {
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
                   id: "entry-overlay__date",
                   type: "datetime-local",
-                  name: "timestamp",
-                  value: (0,_utils__WEBPACK_IMPORTED_MODULE_2__.timestampToInputVal)(this.state.timestamp),
+                  name: "dateTime",
+                  value: this.state.dateTime,
                   onChange: this.handleInputChange,
                   required: true
                 })
@@ -2861,7 +3148,8 @@ var EntryOverlay = /*#__PURE__*/function (_React$Component) {
                   maxLength: constants.entries.name_max_length,
                   value: this.state.food,
                   onChange: this.handleInputChange,
-                  required: true
+                  required: true,
+                  autoFocus: true
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_FormRow__WEBPACK_IMPORTED_MODULE_1__["default"], {
                 labelForId: "entry-overlay__cals",
@@ -2900,16 +3188,11 @@ var EntryOverlay = /*#__PURE__*/function (_React$Component) {
               className: "btn btn--light btn--small",
               type: "button",
               value: "Cancel",
-              onClick: function onClick(e) {
-                return _this2.handleCancel(e);
-              }
+              onClick: this.handleCancel
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
               className: "btn btn--dark btn--small",
               type: "submit",
-              value: "Confirm",
-              onClick: function onClick(e) {
-                return _this2.handleSubmit(e);
-              }
+              value: "Confirm"
             })]
           })]
         })]
@@ -2966,14 +3249,32 @@ function FormRow(props) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "inputValToTimestamp": () => (/* binding */ inputValToTimestamp),
+/* harmony export */   "parseInputValue": () => (/* binding */ parseInputValue),
 /* harmony export */   "timestampToInputVal": () => (/* binding */ timestampToInputVal),
 /* harmony export */   "toRelativeLocaleDateString": () => (/* binding */ toRelativeLocaleDateString)
 /* harmony export */ });
+/**
+ * @param {object} input 
+ * @returns the input value cast to the correct data type (e.g. number, boolean), based on the input type.
+ */
+var parseInputValue = function parseInputValue(input) {
+  switch (input.type) {
+    case 'checkbox':
+      return input.checked;
+
+    case 'number':
+      return Number(input.value);
+
+    default:
+      return input.value;
+  }
+};
 /**
  * @param {number} timestamp 
  * @param {boolean} dateOnly 
  * @returns a string that can be passed to the value parameter of a datetime HTML input.
  */
+
 var timestampToInputVal = function timestampToInputVal(timestamp) {
   var dateOnly = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var timezoneOffset = new Date().getTimezoneOffset() * 60000; // convert offset to milliseconds
@@ -2982,7 +3283,7 @@ var timestampToInputVal = function timestampToInputVal(timestamp) {
 };
 /**
  * @param {string} value 
- * @returns the timestamp representation of the given datetime HTML input value.
+ * @returns the timestamp representation (in milliseconds) of the given datetime HTML input value.
  */
 
 var inputValToTimestamp = function inputValToTimestamp(value) {
