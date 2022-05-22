@@ -17,8 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $tokenName = 'api';
-
         // Create admin user.
         User::factory()->admin()->create();
         

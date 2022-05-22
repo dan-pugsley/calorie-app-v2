@@ -22,7 +22,7 @@ class EntryFactory extends Factory
             'user_id' => $this->faker->randomElement(\App\Models\User::pluck('id')->toArray()),
             'name' => $this->faker->randomElement(['beer', 'cake', 'burger', 'sandwich', 'granola', 'banana', 'porridge', 'cereal', 'coca cola', 'pizza', 'pasta']),
             'calories' => rand(50, 500),
-            'is_cheat' => false,
+            'is_cheat' => rand(0, 9) >= 8,
             'created_at' => $createdAt,
             'updated_at' => $createdAt,
         ];
